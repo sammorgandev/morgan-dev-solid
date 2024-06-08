@@ -1,9 +1,10 @@
 import { Icon } from "solid-heroicons";
 import { moon, sun } from "solid-heroicons/solid";
 import { useDarkMode } from "./layout/ThemeProvider";
-import { JSX, createSignal } from "solid-js";
+import { JSX, createSignal, useContext } from "solid-js";
 import { A, action } from "@solidjs/router";
 import { toast, Toaster } from "solid-toast";
+import { SessionContext } from "./auth/SessionContext";
 
 const socialLinks = {
 	social: [
@@ -49,6 +50,8 @@ const [email, setEmail] = createSignal("");
 const currentYear = new Date().getFullYear();
 const successAlert = () => toast("Success! You are now subscribed.");
 export default function Footer() {
+	const { session, setSession } = useContext(SessionContext);
+
 	const { theme, setTheme } = useDarkMode();
 	const toggleDarkMode = () => {
 		setTheme(theme() === "dark" ? "light" : "dark");
@@ -83,42 +86,45 @@ export default function Footer() {
 	return (
 		<footer class="bg-transparent" aria-labelledby="footer-heading">
 			<div class="mx-auto max-w-full pb-4">
-				<div class="border-t px-6 border-gray-900/10 pt-4 dark:border-gray-400/20 lg:flex lg:items-center lg:justify-between">
-					<div>
-						<h3 class="text-sm font-semibold leading-6 text-gray-900 dark:text-gray-100">
-							Subscribe to my newsletter
-						</h3>
-						<p class="mt-2 text-sm leading-6 text-gray-600 dark:text-gray-300">
-							I send out monthly thoughts on no-code, code, and building things.
-						</p>
-					</div>
-					<Toaster />
-					<form
-						class="mt-4 sm:flex sm:max-w-md lg:mt-0"
-						onSubmit={handleSubmit}>
-						<label for="email-address" class="sr-only">
-							Email address
-						</label>
-						<input
-							type="email"
-							name="email-address"
-							id="email-address"
-							value={email()}
-							onChange={(e) => setEmail(e.target.value)}
-							autocomplete="email"
-							required
-							class="block w-full rounded-md border-0 dark:bg-white/5 px-3.5 py-2 text-gray-900 dark:text-white shadow-sm ring-1 ring-inset ring-gray-300 dark:ring-white/10 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 dark:focus:ring-indigo-500 sm:text-sm sm:leading-6"
-							placeholder="Enter your email"
-						/>
-						<div class="mt-4 sm:ml-4 sm:mt-0 sm:flex-shrink-0">
-							<button
-								type="submit"
-								class="flex w-full items-center justify-start md:justify-center bg-transparent px-1 py-2 text-sm font-semibold text-indigo-600 dark:text-indigo-400">
-								Subscribe →
-							</button>
+				{!session && (
+					<div class="border-t px-6 border-gray-900/10 pt-4 dark:border-gray-400/20 lg:flex lg:items-center lg:justify-between">
+						<div>
+							<h3 class="text-sm font-semibold leading-6 text-gray-900 dark:text-gray-100">
+								Subscribe to my newsletter
+							</h3>
+							<p class="mt-2 text-sm leading-6 text-gray-600 dark:text-gray-300">
+								I send out monthly thoughts on no-code, code, and building
+								things.
+							</p>
 						</div>
-					</form>
-				</div>
+						<Toaster />
+						<form
+							class="mt-4 sm:flex sm:max-w-md lg:mt-0"
+							onSubmit={handleSubmit}>
+							<label for="email-address" class="sr-only">
+								Email address
+							</label>
+							<input
+								type="email"
+								name="email-address"
+								id="email-address"
+								value={email()}
+								onChange={(e) => setEmail(e.target.value)}
+								autocomplete="email"
+								required
+								class="block w-full rounded-md border-0 dark:bg-white/5 px-3.5 py-2 text-gray-900 dark:text-white shadow-sm ring-1 ring-inset ring-gray-300 dark:ring-white/10 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 dark:focus:ring-indigo-500 sm:text-sm sm:leading-6"
+								placeholder="Enter your email"
+							/>
+							<div class="mt-4 sm:ml-4 sm:mt-0 sm:flex-shrink-0">
+								<button
+									type="submit"
+									class="flex w-full items-center justify-start md:justify-center bg-transparent px-1 py-2 text-sm font-semibold text-indigo-600 dark:text-indigo-400">
+									Subscribe →
+								</button>
+							</div>
+						</form>
+					</div>
+				)}
 				<div class="mt-4 px-6 border-t border-gray-900/10 pt-4 md:flex md:items-center md:justify-between">
 					<div class="flex space-x-6 md:order-2">
 						<div

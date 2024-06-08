@@ -8,6 +8,7 @@ import About from "./pages/About";
 import Work from "./pages/Work";
 import Blog from "./pages/Blog";
 import Auth from "./pages/Auth";
+import Category from "./pages/Category";
 
 const root = document.getElementById("root");
 
@@ -23,8 +24,9 @@ render(
 			<Route path="/" component={Home} />
 			<Route path="/about" component={About} />
 			<Route path="/work" component={Work} />
+			<Route path="/category/:category" component={Category} />
 			<Route path="/blog" component={Blog} />
-			<Route path="/auth" component={Auth} />
+			<Route path="/auth/:mode?" component={Auth} />
 		</Router>
 	),
 	root!
