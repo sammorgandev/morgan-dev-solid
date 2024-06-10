@@ -9,7 +9,10 @@ import Work from "./pages/Work";
 import Blog from "./pages/Blog";
 import Auth from "./pages/Auth";
 import Category from "./pages/Category";
-
+import Dashboard from "./pages/Dashboard";
+import { AuthProvider } from "./components/auth/authContext";
+import { SupabaseProvider } from "solid-supabase";
+import { supabase } from "./components/auth/supabase";
 const root = document.getElementById("root");
 
 if (import.meta.env.DEV && !(root instanceof HTMLElement)) {
@@ -20,14 +23,19 @@ if (import.meta.env.DEV && !(root instanceof HTMLElement)) {
 
 render(
 	() => (
-		<Router root={Layout}>
-			<Route path="/" component={Home} />
-			<Route path="/about" component={About} />
-			<Route path="/work" component={Work} />
-			<Route path="/category/:category" component={Category} />
-			<Route path="/blog" component={Blog} />
-			<Route path="/auth/:mode?" component={Auth} />
-		</Router>
+		<SupabaseProvider client={supabase}>
+			<AuthProvider>
+				<Router root={Layout}>
+					<Route path="/" component={Home} />
+					<Route path="/about" component={About} />
+					<Route path="/work" component={Work} />
+					<Route path="/category/:category" component={Category} />
+					<Route path="/blog" component={Blog} />
+					<Route path="/auth/:mode?" component={Auth} />
+					<Route path="/dashboard" component={Dashboard} />
+				</Router>
+			</AuthProvider>
+		</SupabaseProvider>
 	),
 	root!
 );

@@ -6,12 +6,10 @@ const Work: Component = () => {
 	const fetchPosts = async () => {
 		const response = await fetch(import.meta.env.VITE_API_URL + "/posts");
 		const data = await response.json();
-		console.log(data.posts);
 		return data.posts.filter((post: Post) => post.category !== "blog posts");
 	};
 	const [posts] = createResource(fetchPosts);
 
-	// Render posts
 	return (
 		<>
 			<div class="mx-auto max-w-7xl px-6 lg:px-8">

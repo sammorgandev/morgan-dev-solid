@@ -1,25 +1,39 @@
-import { Component, createSignal } from "solid-js";
-import { supabase } from "../components/auth/supabase";
-
+import {
+	Component,
+	createEffect,
+	createSignal,
+	onCleanup,
+	onMount,
+	useContext,
+} from "solid-js";
+import { useAuth } from "../components/auth/authContext";
+import { useNavigate } from "@solidjs/router";
+import {
+	useSupabase,
+	useSupabaseAuth,
+	useOnAuthStateChange,
+} from "solid-supabase";
+import { Session } from "@supabase/supabase-js";
 const pathSegments = window.location.pathname.split("/");
 const mode = pathSegments[2];
 
 const Auth: Component = () => {
+	const { session } = useAuth();
 	console.log(mode);
 	const [email, setEmail] = createSignal<string>("");
 	const [password, setPassword] = createSignal<string>("");
 	const [loading, setLoading] = createSignal<boolean>(false);
+	const navigate = useNavigate();
+
+	const auth = useSupabaseAuth();
 
 	const handleLogin = async (e: Event) => {
 		e.preventDefault();
 
 		try {
 			setLoading(true);
-			const method =
-				mode === "sign-in"
-					? supabase.auth.signInWithPassword
-					: supabase.auth.signUp;
-			const { error } = await method.call(supabase.auth, {
+			const method = mode === "sign-in" ? auth.signInWithPassword : auth.signUp;
+			const { data, error } = await method.call(auth, {
 				email: email(),
 				password: password(),
 			});
@@ -33,18 +47,18 @@ const Auth: Component = () => {
 		} finally {
 			setLoading(false);
 			console.log("done");
+			console.log(session());
 		}
 	};
+
+	createEffect(() => {
+		if (session()) {
+			navigate("/dashboard");
+		}
+	});
+
 	return (
 		<>
-			{/*
-			This example requires updating your template:
-	
-			```
-			<html class="h-full bg-white">
-			<body class="h-full">
-			```
-		  */}
 			<div class="flex min-h-full flex-1 flex-col justify-center">
 				<div class="sm:mx-auto sm:w-full sm:max-w-sm">
 					<img
@@ -76,7 +90,7 @@ const Auth: Component = () => {
 									value={email()}
 									onChange={(e) => setEmail(e.currentTarget.value)}
 									required
-									class="block w-full rounded-md border-0 dark:bg-white/5 px-3.5 py-2 text-gray-900 dark:text-white shadow-sm ring-1 ring-inset ring-gray-300 dark:ring-white/10 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 dark:focus:ring-indigo-500 sm:text-sm sm:leading-6"
+									class="input-primary"
 								/>
 							</div>
 						</div>
@@ -105,7 +119,7 @@ const Auth: Component = () => {
 									value={password()}
 									onChange={(e) => setPassword(e.currentTarget.value)}
 									required
-									class="block w-full rounded-md border-0 dark:bg-white/5 px-3.5 py-2 text-gray-900 dark:text-white shadow-sm ring-1 ring-inset ring-gray-300 dark:ring-white/10 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 dark:focus:ring-indigo-500 sm:text-sm sm:leading-6"
+									class="input-primary"
 								/>
 							</div>
 						</div>
