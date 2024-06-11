@@ -21,10 +21,13 @@ import {
 	magnifyingGlass,
 	cog_6Tooth,
 } from "solid-heroicons/solid";
+import Logo from "../components/atoms/Logo";
+import { useAuth } from "../components/auth/authContext";
+import { user } from "solid-heroicons/solid";
 
 const navigation = [
-	{ name: "Dashboard", href: "#", icon: home, current: true },
-	{ name: "Team", href: "#", icon: users, current: false },
+	{ name: "Home", href: "#", icon: home, current: true },
+	{ name: "About", href: "#", icon: users, current: false },
 	{ name: "Projects", href: "#", icon: folder, current: false },
 	{ name: "Calendar", href: "#", icon: calendar, current: false },
 	{ name: "Documents", href: "#", icon: documentDuplicate, current: false },
@@ -49,7 +52,6 @@ interface DialogProps {
 	onClose: () => void;
 	children: JSX.Element;
 }
-
 const Dialog = (props: DialogProps) => {
 	return (
 		<div class={`fixed inset-0 z-50 ${props.open ? "block" : "hidden"}`}>
@@ -79,7 +81,6 @@ interface MenuProps {
 	button: JSX.Element;
 	children: JSX.Element;
 }
-
 const Menu = (props: MenuProps) => {
 	const [isOpen, setIsOpen] = createSignal(false);
 
@@ -103,13 +104,11 @@ const Menu = (props: MenuProps) => {
 		</div>
 	);
 };
-
 interface MenuItemProps {
 	href: string;
 	active?: boolean;
 	children: JSX.Element;
 }
-
 const MenuItem = (props: MenuItemProps) => {
 	return (
 		<a
@@ -139,20 +138,18 @@ const Transition = (props: { show: any; children: any }) => {
 	return <Show when={props.show}>{props.children}</Show>;
 };
 
-const Example = () => {
+const DashboardLayout = () => {
 	const [sidebarOpen, setSidebarOpen] = createSignal(false);
+	const { user } = useAuth();
 
 	return (
 		<>
 			<div>
+				{/* Mobile menu */}
 				<Transition show={sidebarOpen()}>
 					<Dialog open={sidebarOpen()} onClose={() => setSidebarOpen(false)}>
 						<div class="flex h-16 shrink-0 items-center">
-							<img
-								class="h-8 w-auto"
-								src="https://tailwindui.com/img/logos/mark.svg?color=indigo&shade=600"
-								alt="Your Company"
-							/>
+							<Logo />
 						</div>
 						<nav class="flex flex-1 flex-col">
 							<ul role="list" class="flex flex-1 flex-col gap-y-7">
@@ -239,11 +236,7 @@ const Example = () => {
 				<div class="hidden lg:fixed lg:inset-y-0 lg:z-50 lg:flex lg:w-72 lg:flex-col">
 					<div class="flex grow flex-col gap-y-5 overflow-y-auto border-r border-gray-200 bg-white px-6 pb-4">
 						<div class="flex h-16 shrink-0 items-center">
-							<img
-								class="h-8 w-auto"
-								src="https://tailwindui.com/img/logos/mark.svg?color=indigo&shade=600"
-								alt="Your Company"
-							/>
+							<Logo />
 						</div>
 						<nav class="flex flex-1 flex-col">
 							<ul role="list" class="flex flex-1 flex-col gap-y-7">
@@ -327,6 +320,7 @@ const Example = () => {
 				</div>
 
 				<div class="lg:pl-72">
+					{/* Header */}
 					<div class="sticky top-0 z-40 flex h-16 shrink-0 items-center gap-x-4 border-b border-gray-200 bg-white px-4 shadow-sm sm:gap-x-6 sm:px-6 lg:px-8">
 						<button
 							type="button"
@@ -382,7 +376,7 @@ const Example = () => {
 												<span
 													class="ml-4 text-sm font-semibold leading-6 text-gray-900"
 													aria-hidden="true">
-													Tom Cook
+													{user()?.email}
 												</span>
 												<Icon
 													path={chevronDown}
@@ -402,6 +396,7 @@ const Example = () => {
 						</div>
 					</div>
 
+					{/* Main content */}
 					<main class="py-10">
 						<div class="px-4 sm:px-6 lg:px-8">
 							<h1>Here is my dashboard</h1>
@@ -413,4 +408,4 @@ const Example = () => {
 	);
 };
 
-export default Example;
+export default DashboardLayout;

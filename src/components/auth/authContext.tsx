@@ -7,25 +7,34 @@ import {
 	Component,
 } from "solid-js";
 import { supabase } from "./supabase";
-import { Session } from "@supabase/supabase-js";
+import { Session, User } from "@supabase/supabase-js";
 
 type AuthContextType = {
 	session: () => Session | null;
+	user: () => User | null;
 };
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
 export const AuthProvider: Component<{ children: JSX.Element }> = (props) => {
 	const [session, setSession] = createSignal<Session | null>(null);
-
+	const [user, setUser] = createSignal<User | null>(null);
 	supabase.auth.getSession().then(({ data }) => {
 		console.log(data);
 		setSession(data.session);
 	});
 
+	supabase.auth.getUser().then(({ data }) => {
+		console.log(data);
+		setUser(data.user);
+	});
+
 	const { data: authListener } = supabase.auth.onAuthStateChange(
 		(_event, newSession) => {
 			setSession(newSession);
+			supabase.auth.getUser().then(({ data }) => {
+				setUser(data.user);
+			});
 		}
 	);
 
@@ -34,7 +43,7 @@ export const AuthProvider: Component<{ children: JSX.Element }> = (props) => {
 	});
 
 	return (
-		<AuthContext.Provider value={{ session }}>
+		<AuthContext.Provider value={{ session, user }}>
 			{props.children}
 		</AuthContext.Provider>
 	);
