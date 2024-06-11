@@ -1,11 +1,11 @@
 import { type Component, type JSX } from "solid-js";
 import Header from "./components/Header";
 import Footer from "./components/Footer";
-import { ThemeProvider } from "./components/layout/ThemeProvider";
-import BackgroundPattern from "./components/layout/BackgroundPattern";
+import { ThemeProvider } from "../../components/layout/ThemeProvider";
+import BackgroundPattern from "../../components/layout/BackgroundPattern";
 import { useLocation } from "@solidjs/router";
 
-const Layout: Component<{ children?: JSX.Element }> = (props) => {
+const AdminLayout: Component<{ children?: JSX.Element }> = (props) => {
 	const path = useLocation().pathname;
 	console.log(path);
 	return (
@@ -15,11 +15,9 @@ const Layout: Component<{ children?: JSX.Element }> = (props) => {
 					<div class="z-0 w-full">
 						<BackgroundPattern />
 					</div>
-					{path !== "/dashboard" && (
-						<div class="z-20 w-full">
-							<Header />
-						</div>
-					)}
+					<div class="z-20 w-full">
+						<Header />
+					</div>
 					<div
 						class={`${
 							path !== "/dashboard"
@@ -28,17 +26,13 @@ const Layout: Component<{ children?: JSX.Element }> = (props) => {
 						}`}>
 						{props.children}
 					</div>
-					{path !== "/dashboard" && (
-						<div
-							class={`z-10 w-full
-						`}>
-							<Footer />
-						</div>
-					)}
+					<div class="z-10 w-full">
+						<Footer />
+					</div>
 				</div>
 			</>
 		</ThemeProvider>
 	);
 };
 
-export default Layout;
+export default AdminLayout;

@@ -1,424 +1,416 @@
+import {
+	createSignal,
+	Show,
+	createEffect,
+	onCleanup,
+	JSX,
+	For,
+} from "solid-js";
 import { Icon } from "solid-heroicons";
-import { photo, user, userCircle } from "solid-heroicons/solid";
-import { useSupabase } from "solid-supabase";
-import { useNavigate } from "@solidjs/router";
-import { createEffect, createSignal, onMount } from "solid-js";
-import { User } from "@supabase/supabase-js";
-import { useAuth } from "../components/auth/authContext";
+import {
+	bars_3,
+	bell,
+	calendar,
+	chartPie,
+	documentDuplicate,
+	folder,
+	home,
+	users,
+	xMark,
+	chevronDown,
+	magnifyingGlass,
+	cog_6Tooth,
+} from "solid-heroicons/solid";
 
-export default function Profile() {
-	const { session } = useAuth();
-	const supabase = useSupabase();
-	const [user, setUser] = createSignal<User | null>(null);
-	const navigate = useNavigate();
+const navigation = [
+	{ name: "Dashboard", href: "#", icon: home, current: true },
+	{ name: "Team", href: "#", icon: users, current: false },
+	{ name: "Projects", href: "#", icon: folder, current: false },
+	{ name: "Calendar", href: "#", icon: calendar, current: false },
+	{ name: "Documents", href: "#", icon: documentDuplicate, current: false },
+	{ name: "Reports", href: "#", icon: chartPie, current: false },
+];
+const teams = [
+	{ id: 1, name: "Heroicons", href: "#", initial: "H", current: false },
+	{ id: 2, name: "Tailwind Labs", href: "#", initial: "T", current: false },
+	{ id: 3, name: "Workcation", href: "#", initial: "W", current: false },
+];
+const userNavigation = [
+	{ name: "Your profile", href: "#" },
+	{ name: "Sign out", href: "#" },
+];
 
-	const handleLogout = async () => {
-		await supabase.auth.signOut();
-		console.log(session());
+function classNames(...classes: string[]) {
+	return classes.filter(Boolean).join(" ");
+}
+
+interface DialogProps {
+	open: boolean;
+	onClose: () => void;
+	children: JSX.Element;
+}
+
+const Dialog = (props: DialogProps) => {
+	return (
+		<div class={`fixed inset-0 z-50 ${props.open ? "block" : "hidden"}`}>
+			<div class="fixed inset-0 bg-gray-900/80" onClick={props.onClose}></div>
+			<div class="fixed inset-0 flex">
+				<div class="relative mr-16 flex w-full max-w-xs flex-1">
+					<div class="absolute left-full top-0 flex w-16 justify-center pt-5">
+						<button type="button" class="-m-2.5 p-2.5" onClick={props.onClose}>
+							<span class="sr-only">Close sidebar</span>
+							<Icon
+								path={xMark}
+								class="h-6 w-6 text-white"
+								aria-hidden="true"
+							/>
+						</button>
+					</div>
+					<div class="flex grow flex-col gap-y-5 overflow-y-auto bg-white px-6 pb-4">
+						{props.children}
+					</div>
+				</div>
+			</div>
+		</div>
+	);
+};
+
+interface MenuProps {
+	button: JSX.Element;
+	children: JSX.Element;
+}
+
+const Menu = (props: MenuProps) => {
+	const [isOpen, setIsOpen] = createSignal(false);
+
+	const toggleMenu = () => {
+		setIsOpen(!isOpen());
 	};
 
+	return (
+		<div class="relative">
+			<button class="-m-1.5 flex items-center p-1.5" onClick={toggleMenu}>
+				{props.button}
+			</button>
+			<Show when={isOpen()}>
+				<div class="fixed inset-0 z-10" onClick={toggleMenu}></div>
+				<div
+					class="absolute right-0 z-20 mt-2.5 w-32 origin-top-right rounded-md bg-white py-2 shadow-lg ring-1 ring-gray-900/5 focus:outline-none"
+					onClick={toggleMenu}>
+					{props.children}
+				</div>
+			</Show>
+		</div>
+	);
+};
+
+interface MenuItemProps {
+	href: string;
+	active?: boolean;
+	children: JSX.Element;
+}
+
+const MenuItem = (props: MenuItemProps) => {
+	return (
+		<a
+			href={props.href}
+			class={classNames(
+				props.active ? "bg-gray-50" : "",
+				"block px-3 py-1 text-sm leading-6 text-gray-900"
+			)}>
+			{props.children}
+		</a>
+	);
+};
+
+const Transition = (props: { show: any; children: any }) => {
 	createEffect(() => {
-		if (session() === null) {
-			navigate("/auth/sign-in");
+		if (props.show) {
+			document.body.classList.add("overflow-hidden");
+		} else {
+			document.body.classList.remove("overflow-hidden");
 		}
 	});
 
-	console.log();
+	onCleanup(() => {
+		document.body.classList.remove("overflow-hidden");
+	});
+
+	return <Show when={props.show}>{props.children}</Show>;
+};
+
+const Example = () => {
+	const [sidebarOpen, setSidebarOpen] = createSignal(false);
+
 	return (
 		<>
-			<div class="space-y-12">
-				<div class="border-b border-gray-900/10 pb-12">
-					<h2 class="text-base font-semibold leading-7 text-gray-900">
-						Profile
-					</h2>
-					<p class="mt-1 text-sm leading-6 text-gray-600">
-						This information will be displayed publicly so be careful what you
-						share.
-					</p>
-
-					<div class="mt-10 grid grid-cols-1 gap-x-6 gap-y-8 sm:grid-cols-6">
-						<div class="sm:col-span-4">
-							<label
-								for="username"
-								class="block text-sm font-medium leading-6 text-gray-900">
-								Username
-							</label>
-							<div class="mt-2">
-								<div class="flex rounded-md shadow-sm ring-1 ring-inset ring-gray-300 focus-within:ring-2 focus-within:ring-inset focus-within:ring-indigo-600 sm:max-w-md">
-									<span class="flex select-none items-center pl-3 text-gray-500 sm:text-sm">
-										workcation.com/
-									</span>
-									<input
-										type="text"
-										name="username"
-										id="username"
-										autocomplete="username"
-										class="block flex-1 border-0 bg-transparent py-1.5 pl-1 text-gray-900 placeholder:text-gray-400 focus:ring-0 sm:text-sm sm:leading-6"
-										placeholder="janesmith"
-									/>
-								</div>
-							</div>
+			<div>
+				<Transition show={sidebarOpen()}>
+					<Dialog open={sidebarOpen()} onClose={() => setSidebarOpen(false)}>
+						<div class="flex h-16 shrink-0 items-center">
+							<img
+								class="h-8 w-auto"
+								src="https://tailwindui.com/img/logos/mark.svg?color=indigo&shade=600"
+								alt="Your Company"
+							/>
 						</div>
+						<nav class="flex flex-1 flex-col">
+							<ul role="list" class="flex flex-1 flex-col gap-y-7">
+								<li>
+									<ul role="list" class="-mx-2 space-y-1">
+										<For each={navigation}>
+											{(item) => (
+												<li>
+													<a
+														href={item.href}
+														class={classNames(
+															item.current
+																? "bg-gray-50 text-indigo-600"
+																: "text-gray-700 hover:bg-gray-50 hover:text-indigo-600",
+															"group flex gap-x-3 rounded-md p-2 text-sm font-semibold leading-6"
+														)}>
+														<Icon
+															path={item.icon}
+															class={classNames(
+																item.current
+																	? "text-indigo-600"
+																	: "text-gray-400 group-hover:text-indigo-600",
+																"h-6 w-6 shrink-0"
+															)}
+															aria-hidden="true"
+														/>
+														{item.name}
+													</a>
+												</li>
+											)}
+										</For>
+									</ul>
+								</li>
+								<li>
+									<div class="text-xs font-semibold leading-6 text-gray-400">
+										Your teams
+									</div>
+									<ul role="list" class="-mx-2 mt-2 space-y-1">
+										<For each={teams}>
+											{(team) => (
+												<li>
+													<a
+														href={team.href}
+														class={classNames(
+															team.current
+																? "bg-gray-50 text-indigo-600"
+																: "text-gray-700 hover:bg-gray-50 hover:text-indigo-600",
+															"group flex gap-x-3 rounded-md p-2 text-sm font-semibold leading-6"
+														)}>
+														<span
+															class={classNames(
+																team.current
+																	? "border-indigo-600 text-indigo-600"
+																	: "border-gray-200 text-gray-400 group-hover:border-indigo-600 group-hover:text-indigo-600",
+																"flex h-6 w-6 shrink-0 items-center justify-center rounded-lg border bg-white text-[0.625rem] font-medium"
+															)}>
+															{team.initial}
+														</span>
+														<span class="truncate">{team.name}</span>
+													</a>
+												</li>
+											)}
+										</For>
+									</ul>
+								</li>
+								<li class="mt-auto">
+									<a
+										href="#"
+										class="group -mx-2 flex gap-x-3 rounded-md p-2 text-sm font-semibold leading-6 text-gray-700 hover:bg-gray-50 hover:text-indigo-600">
+										<Icon
+											path={cog_6Tooth}
+											class="h-6 w-6 shrink-0 text-gray-400 group-hover:text-indigo-600"
+											aria-hidden="true"
+										/>
+										Settings
+									</a>
+								</li>
+							</ul>
+						</nav>
+					</Dialog>
+				</Transition>
 
-						<div class="col-span-full">
-							<label
-								for="about"
-								class="block text-sm font-medium leading-6 text-gray-900">
-								About
-							</label>
-							<div class="mt-2">
-								<textarea
-									id="about"
-									name="about"
-									rows={3}
-									class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
-									value={""}
+				{/* Static sidebar for desktop */}
+				<div class="hidden lg:fixed lg:inset-y-0 lg:z-50 lg:flex lg:w-72 lg:flex-col">
+					<div class="flex grow flex-col gap-y-5 overflow-y-auto border-r border-gray-200 bg-white px-6 pb-4">
+						<div class="flex h-16 shrink-0 items-center">
+							<img
+								class="h-8 w-auto"
+								src="https://tailwindui.com/img/logos/mark.svg?color=indigo&shade=600"
+								alt="Your Company"
+							/>
+						</div>
+						<nav class="flex flex-1 flex-col">
+							<ul role="list" class="flex flex-1 flex-col gap-y-7">
+								<li>
+									<ul role="list" class="-mx-2 space-y-1">
+										<For each={navigation}>
+											{(item) => (
+												<li>
+													<a
+														href={item.href}
+														class={classNames(
+															item.current
+																? "bg-gray-50 text-indigo-600"
+																: "text-gray-700 hover:bg-gray-50 hover:text-indigo-600",
+															"group flex gap-x-3 rounded-md p-2 text-sm font-semibold leading-6"
+														)}>
+														<Icon
+															path={item.icon}
+															class={classNames(
+																item.current
+																	? "text-indigo-600"
+																	: "text-gray-400 group-hover:text-indigo-600",
+																"h-6 w-6 shrink-0"
+															)}
+															aria-hidden="true"
+														/>
+														{item.name}
+													</a>
+												</li>
+											)}
+										</For>
+									</ul>
+								</li>
+								<li>
+									<div class="text-xs font-semibold leading-6 text-gray-400">
+										Your teams
+									</div>
+									<ul role="list" class="-mx-2 mt-2 space-y-1">
+										<For each={teams}>
+											{(team) => (
+												<li>
+													<a
+														href={team.href}
+														class={classNames(
+															team.current
+																? "bg-gray-50 text-indigo-600"
+																: "text-gray-700 hover:bg-gray-50 hover:text-indigo-600",
+															"group flex gap-x-3 rounded-md p-2 text-sm font-semibold leading-6"
+														)}>
+														<span
+															class={classNames(
+																team.current
+																	? "border-indigo-600 text-indigo-600"
+																	: "border-gray-200 text-gray-400 group-hover:border-indigo-600 group-hover:text-indigo-600",
+																"flex h-6 w-6 shrink-0 items-center justify-center rounded-lg border bg-white text-[0.625rem] font-medium"
+															)}>
+															{team.initial}
+														</span>
+														<span class="truncate">{team.name}</span>
+													</a>
+												</li>
+											)}
+										</For>
+									</ul>
+								</li>
+								<li class="mt-auto">
+									<a
+										href="#"
+										class="group -mx-2 flex gap-x-3 rounded-md p-2 text-sm font-semibold leading-6 text-gray-700 hover:bg-gray-50 hover:text-indigo-600">
+										<Icon
+											path={cog_6Tooth}
+											class="h-6 w-6 shrink-0 text-gray-400 group-hover:text-indigo-600"
+											aria-hidden="true"
+										/>
+										Settings
+									</a>
+								</li>
+							</ul>
+						</nav>
+					</div>
+				</div>
+
+				<div class="lg:pl-72">
+					<div class="sticky top-0 z-40 flex h-16 shrink-0 items-center gap-x-4 border-b border-gray-200 bg-white px-4 shadow-sm sm:gap-x-6 sm:px-6 lg:px-8">
+						<button
+							type="button"
+							class="-m-2.5 p-2.5 text-gray-700 lg:hidden"
+							onClick={() => setSidebarOpen(true)}>
+							<span class="sr-only">Open sidebar</span>
+							<Icon path={bars_3} class="h-6 w-6" aria-hidden="true" />
+						</button>
+
+						<div class="h-6 w-px bg-gray-200 lg:hidden" aria-hidden="true" />
+
+						<div class="flex flex-1 gap-x-4 self-stretch lg:gap-x-6">
+							<form class="relative flex flex-1" action="#" method="get">
+								<label for="search-field" class="sr-only">
+									Search
+								</label>
+								<Icon
+									path={magnifyingGlass}
+									class="pointer-events-none absolute inset-y-0 left-0 h-full w-5 text-gray-400"
+									aria-hidden="true"
 								/>
-							</div>
-							<p class="mt-3 text-sm leading-6 text-gray-600">
-								Write a few sentences about yourself.
-							</p>
-						</div>
-
-						<div class="col-span-full">
-							<label
-								for="photo"
-								class="block text-sm font-medium leading-6 text-gray-900">
-								Photo
-							</label>
-							<div class="mt-2 flex items-center gap-x-3">
-								<Icon path={userCircle} class="h-12 w-12 text-gray-300" />
-
+								<input
+									id="search-field"
+									class="block h-full w-full border-0 py-0 pl-8 pr-0 text-gray-900 placeholder:text-gray-400 focus:ring-0 sm:text-sm"
+									placeholder="Search..."
+									type="search"
+									name="search"
+								/>
+							</form>
+							<div class="flex items-center gap-x-4 lg:gap-x-6">
 								<button
 									type="button"
-									class="rounded-md bg-white px-2.5 py-1.5 text-sm font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50">
-									Change
+									class="-m-2.5 p-2.5 text-gray-400 hover:text-gray-500">
+									<span class="sr-only">View notifications</span>
+									<Icon path={bell} class="h-6 w-6" aria-hidden="true" />
 								</button>
-							</div>
-						</div>
 
-						<div class="col-span-full">
-							<label
-								for="cover-photo"
-								class="block text-sm font-medium leading-6 text-gray-900">
-								Cover photo
-							</label>
-							<div class="mt-2 flex justify-center rounded-lg border border-dashed border-gray-900/25 px-6 py-10">
-								<div class="text-center">
-									<Icon
-										path={photo}
-										class="mx-auto h-12 w-12 text-gray-300"
-										aria-hidden="true"
-									/>
-									<div class="mt-4 flex text-sm leading-6 text-gray-600">
-										<label
-											for="file-upload"
-											class="relative cursor-pointer rounded-md bg-white font-semibold text-indigo-600 focus-within:outline-none focus-within:ring-2 focus-within:ring-indigo-600 focus-within:ring-offset-2 hover:text-indigo-500">
-											<span>Upload a file</span>
-											<input
-												id="file-upload"
-												name="file-upload"
-												type="file"
-												class="sr-only"
+								<div
+									class="hidden lg:block lg:h-6 lg:w-px lg:bg-gray-200"
+									aria-hidden="true"
+								/>
+
+								<Menu
+									button={
+										<>
+											<span class="sr-only">Open user menu</span>
+											<img
+												class="h-8 w-8 rounded-full bg-gray-50"
+												src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80"
+												alt=""
 											/>
-										</label>
-										<p class="pl-1">or drag and drop</p>
-									</div>
-									<p class="text-xs leading-5 text-gray-600">
-										PNG, JPG, GIF up to 10MB
-									</p>
-								</div>
+											<span class="hidden lg:flex lg:items-center">
+												<span
+													class="ml-4 text-sm font-semibold leading-6 text-gray-900"
+													aria-hidden="true">
+													Tom Cook
+												</span>
+												<Icon
+													path={chevronDown}
+													class="ml-2 h-5 w-5 text-gray-400"
+													aria-hidden="true"
+												/>
+											</span>
+										</>
+									}>
+									<For each={userNavigation}>
+										{(item) => (
+											<MenuItem href={item.href}>{item.name}</MenuItem>
+										)}
+									</For>
+								</Menu>
 							</div>
 						</div>
 					</div>
+
+					<main class="py-10">
+						<div class="px-4 sm:px-6 lg:px-8">
+							<h1>Here is my dashboard</h1>
+						</div>
+					</main>
 				</div>
-
-				<div class="border-b border-gray-900/10 pb-12">
-					<h2 class="text-base font-semibold leading-7 text-gray-900">
-						Personal Information
-					</h2>
-					<p class="mt-1 text-sm leading-6 text-gray-600">
-						Use a permanent address where you can receive mail.
-					</p>
-
-					<div class="mt-10 grid grid-cols-1 gap-x-6 gap-y-8 sm:grid-cols-6">
-						<div class="sm:col-span-3">
-							<label
-								for="first-name"
-								class="block text-sm font-medium leading-6 text-gray-900">
-								First name
-							</label>
-							<div class="mt-2">
-								<input
-									type="text"
-									name="first-name"
-									id="first-name"
-									autocomplete="given-name"
-									class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
-								/>
-							</div>
-						</div>
-
-						<div class="sm:col-span-3">
-							<label
-								for="last-name"
-								class="block text-sm font-medium leading-6 text-gray-900">
-								Last name
-							</label>
-							<div class="mt-2">
-								<input
-									type="text"
-									name="last-name"
-									id="last-name"
-									autocomplete="family-name"
-									class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
-								/>
-							</div>
-						</div>
-
-						<div class="sm:col-span-4">
-							<label
-								for="email"
-								class="block text-sm font-medium leading-6 text-gray-900">
-								Email address
-							</label>
-							<div class="mt-2">
-								<input
-									id="email"
-									name="email"
-									type="email"
-									autocomplete="email"
-									class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
-								/>
-							</div>
-						</div>
-
-						<div class="sm:col-span-3">
-							<label
-								for="country"
-								class="block text-sm font-medium leading-6 text-gray-900">
-								Country
-							</label>
-							<div class="mt-2">
-								<select
-									id="country"
-									name="country"
-									autocomplete="country-name"
-									class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:max-w-xs sm:text-sm sm:leading-6">
-									<option>United States</option>
-									<option>Canada</option>
-									<option>Mexico</option>
-								</select>
-							</div>
-						</div>
-
-						<div class="col-span-full">
-							<label
-								for="street-address"
-								class="block text-sm font-medium leading-6 text-gray-900">
-								Street address
-							</label>
-							<div class="mt-2">
-								<input
-									type="text"
-									name="street-address"
-									id="street-address"
-									autocomplete="street-address"
-									class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
-								/>
-							</div>
-						</div>
-
-						<div class="sm:col-span-2 sm:col-start-1">
-							<label
-								for="city"
-								class="block text-sm font-medium leading-6 text-gray-900">
-								City
-							</label>
-							<div class="mt-2">
-								<input
-									type="text"
-									name="city"
-									id="city"
-									autocomplete="address-level2"
-									class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
-								/>
-							</div>
-						</div>
-
-						<div class="sm:col-span-2">
-							<label
-								for="region"
-								class="block text-sm font-medium leading-6 text-gray-900">
-								State / Province
-							</label>
-							<div class="mt-2">
-								<input
-									type="text"
-									name="region"
-									id="region"
-									autocomplete="address-level1"
-									class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
-								/>
-							</div>
-						</div>
-
-						<div class="sm:col-span-2">
-							<label
-								for="postal-code"
-								class="block text-sm font-medium leading-6 text-gray-900">
-								ZIP / Postal code
-							</label>
-							<div class="mt-2">
-								<input
-									type="text"
-									name="postal-code"
-									id="postal-code"
-									autocomplete="postal-code"
-									class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
-								/>
-							</div>
-						</div>
-					</div>
-				</div>
-
-				<div class="border-b border-gray-900/10 pb-12">
-					<h2 class="text-base font-semibold leading-7 text-gray-900">
-						Notifications
-					</h2>
-					<p class="mt-1 text-sm leading-6 text-gray-600">
-						We'll always let you know about important changes, but you pick what
-						else you want to hear about.
-					</p>
-
-					<div class="mt-10 space-y-10">
-						<fieldset>
-							<legend class="text-sm font-semibold leading-6 text-gray-900">
-								By Email
-							</legend>
-							<div class="mt-6 space-y-6">
-								<div class="relative flex gap-x-3">
-									<div class="flex h-6 items-center">
-										<input
-											id="comments"
-											name="comments"
-											type="checkbox"
-											class="h-4 w-4 rounded border-gray-300 text-indigo-600 focus:ring-indigo-600"
-										/>
-									</div>
-									<div class="text-sm leading-6">
-										<label for="comments" class="font-medium text-gray-900">
-											Comments
-										</label>
-										<p class="text-gray-500">
-											Get notified when someones posts a comment on a posting.
-										</p>
-									</div>
-								</div>
-								<div class="relative flex gap-x-3">
-									<div class="flex h-6 items-center">
-										<input
-											id="candidates"
-											name="candidates"
-											type="checkbox"
-											class="h-4 w-4 rounded border-gray-300 text-indigo-600 focus:ring-indigo-600"
-										/>
-									</div>
-									<div class="text-sm leading-6">
-										<label for="candidates" class="font-medium text-gray-900">
-											Candidates
-										</label>
-										<p class="text-gray-500">
-											Get notified when a candidate applies for a job.
-										</p>
-									</div>
-								</div>
-								<div class="relative flex gap-x-3">
-									<div class="flex h-6 items-center">
-										<input
-											id="offers"
-											name="offers"
-											type="checkbox"
-											class="h-4 w-4 rounded border-gray-300 text-indigo-600 focus:ring-indigo-600"
-										/>
-									</div>
-									<div class="text-sm leading-6">
-										<label for="offers" class="font-medium text-gray-900">
-											Offers
-										</label>
-										<p class="text-gray-500">
-											Get notified when a candidate accepts or rejects an offer.
-										</p>
-									</div>
-								</div>
-							</div>
-						</fieldset>
-						<fieldset>
-							<legend class="text-sm font-semibold leading-6 text-gray-900">
-								Push Notifications
-							</legend>
-							<p class="mt-1 text-sm leading-6 text-gray-600">
-								These are delivered via SMS to your mobile phone.
-							</p>
-							<div class="mt-6 space-y-6">
-								<div class="flex items-center gap-x-3">
-									<input
-										id="push-everything"
-										name="push-notifications"
-										type="radio"
-										class="h-4 w-4 border-gray-300 text-indigo-600 focus:ring-indigo-600"
-									/>
-									<label
-										for="push-everything"
-										class="block text-sm font-medium leading-6 text-gray-900">
-										Everything
-									</label>
-								</div>
-								<div class="flex items-center gap-x-3">
-									<input
-										id="push-email"
-										name="push-notifications"
-										type="radio"
-										class="h-4 w-4 border-gray-300 text-indigo-600 focus:ring-indigo-600"
-									/>
-									<label
-										for="push-email"
-										class="block text-sm font-medium leading-6 text-gray-900">
-										Same as email
-									</label>
-								</div>
-								<div class="flex items-center gap-x-3">
-									<input
-										id="push-nothing"
-										name="push-notifications"
-										type="radio"
-										class="h-4 w-4 border-gray-300 text-indigo-600 focus:ring-indigo-600"
-									/>
-									<label
-										for="push-nothing"
-										class="block text-sm font-medium leading-6 text-gray-900">
-										No push notifications
-									</label>
-								</div>
-							</div>
-						</fieldset>
-					</div>
-				</div>
-			</div>
-
-			<div class="mt-6 flex items-center justify-end gap-x-6">
-				<button
-					type="button"
-					class="text-sm font-semibold leading-6 text-gray-900"
-					onClick={handleLogout}>
-					Log out
-				</button>
-				<button
-					type="submit"
-					class="rounded-md bg-indigo-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600">
-					Save
-				</button>
 			</div>
 		</>
 	);
-}
+};
+
+export default Example;
