@@ -42,7 +42,7 @@ export default function PostCard(post: Post) {
 				</div>
 				<div class="group relative">
 					<h3 class="mt-3 text-lg font-semibold overflow-clip max-h-6 leading-6  text-gray-900 dark:text-gray-100 dark:group-hover:text-gray-50 group-hover:text-gray-600">
-						<a href={`/posts/${post.slug}`}>
+						<a href={`${path.split("/")[1]}/${post.slug}`}>
 							<span class="absolute inset-0" />
 							{post.title}
 						</a>

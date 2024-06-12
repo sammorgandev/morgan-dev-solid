@@ -10,6 +10,7 @@ import Blog from "./pages/Blog";
 import Auth from "./pages/Auth";
 import Category from "./pages/Category";
 import Dashboard from "./pages/Dashboard";
+import Post from "./pages/Post";
 import { AuthProvider } from "./components/auth/authContext";
 import { SupabaseProvider } from "solid-supabase";
 import { supabase } from "./components/auth/supabase";
@@ -29,8 +30,10 @@ render(
 					<Route path="/" component={Home} />
 					<Route path="/about" component={About} />
 					<Route path="/work" component={Work} />
+					<Route path="/work/:slug" component={Post} />
 					<Route path="/category/:category" component={Category} />
 					<Route path="/blog" component={Blog} />
+					<Route path="/blog/:slug" component={Post} />
 					<Route path="/auth/:mode?" component={Auth} />
 					<Route path="/dashboard" component={Dashboard} />
 				</Router>

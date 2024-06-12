@@ -17,7 +17,7 @@ const Work: Component = () => {
 					<h2 class="flex gap-2 justify-center text-3xl font-bold tracking-tight text-gray-900 dark:text-gray-100 sm:text-4xl">
 						<div class="-mt-0.5">👨‍💻</div>Things I've worked on{" "}
 					</h2>
-					<p class="mt-2 text-lg leading-8 dark:text-gray-300 text-gray-600">
+					<p class="mt-6 text-lg leading-8 dark:text-gray-300 text-gray-600">
 						This is a collection of things I've worked on as a developer and
 						entrepreneur.{" "}
 					</p>

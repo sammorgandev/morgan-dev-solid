@@ -21,7 +21,7 @@ const Blog: Component = () => {
 					<h2 class="flex justify-center gap-2 text-3xl font-bold tracking-tight text-gray-900 dark:text-gray-100 sm:text-4xl">
 						<div class="-mt-0.5">📃</div>Blog{" "}
 					</h2>
-					<p class="mt-2 text-lg leading-8 dark:text-gray-300 text-gray-600">
+					<p class="mt-6 text-lg leading-8 dark:text-gray-300 text-gray-600">
 						I write things from time to time about building products and working
 						in tech.{" "}
 					</p>
