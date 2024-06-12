@@ -1,9 +1,8 @@
 import { A, useNavigate } from "@solidjs/router";
 import Logo from "./atoms/Logo";
-import { createEffect, createSignal, useContext } from "solid-js";
+import { createEffect, createSignal } from "solid-js";
 import { user as userIcon, bars_3, xMark } from "solid-heroicons/solid";
 import { Icon } from "solid-heroicons";
-import { supabase } from "./auth/supabase";
 import { useAuth } from "./auth/authContext";
 
 const navItems = [

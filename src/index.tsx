@@ -9,11 +9,11 @@ import Work from "./pages/Work";
 import Blog from "./pages/Blog";
 import Auth from "./pages/Auth";
 import Category from "./pages/Category";
-import Dashboard from "./pages/Dashboard";
 import Post from "./pages/Post";
 import { AuthProvider } from "./components/auth/authContext";
 import { SupabaseProvider } from "solid-supabase";
 import { supabase } from "./components/auth/supabase";
+import DashboardLayout from "./pages/Dashboard";
 const root = document.getElementById("root");
 
 if (import.meta.env.DEV && !(root instanceof HTMLElement)) {
@@ -26,16 +26,24 @@ render(
 	() => (
 		<SupabaseProvider client={supabase}>
 			<AuthProvider>
-				<Router root={Layout}>
-					<Route path="/" component={Home} />
-					<Route path="/about" component={About} />
-					<Route path="/work" component={Work} />
-					<Route path="/work/:slug" component={Post} />
-					<Route path="/category/:category" component={Category} />
-					<Route path="/blog" component={Blog} />
-					<Route path="/blog/:slug" component={Post} />
-					<Route path="/auth/:mode?" component={Auth} />
-					<Route path="/dashboard" component={Dashboard} />
+				<Router>
+					<Route path="/" component={Layout}>
+						<Route path="/" component={Home} />
+						<Route path="/about" component={About} />
+						<Route path="/work" component={Work} />
+						<Route path="/work/:slug" component={Post} />
+						<Route path="/category/:category" component={Category} />
+						<Route path="/blog" component={Blog} />
+						<Route path="/blog/:slug" component={Post} />
+						<Route path="/auth/:mode?" component={Auth} />
+					</Route>
+					<Route path="/" component={DashboardLayout}>
+						<Route path="/dashboard" component={Home} />
+						<Route path="/dashboard/home" component={Home} />
+						<Route path="/dashboard/about" component={About} />
+						<Route path="/dashboard/work" component={Work} />
+						<Route path="/dashboard/blog" component={Blog} />
+					</Route>
 				</Router>
 			</AuthProvider>
 		</SupabaseProvider>

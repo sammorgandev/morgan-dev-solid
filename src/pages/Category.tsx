@@ -1,4 +1,4 @@
-import { A, useParams } from "@solidjs/router";
+import { useParams } from "@solidjs/router";
 import { Component, For, Match, Show, Switch, createResource } from "solid-js";
 import { chevronLeft } from "solid-heroicons/solid";
 import { Icon } from "solid-heroicons";

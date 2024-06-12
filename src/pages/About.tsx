@@ -1,13 +1,18 @@
-import { A } from "@solidjs/router";
+import { A, useLocation } from "@solidjs/router";
 import { Component } from "solid-js";
 import { Icon } from "solid-heroicons";
 import { checkCircle } from "solid-heroicons/solid";
 
 const About: Component = () => {
+	const path = useLocation().pathname;
+	const page = path.split("/")[1];
 	return (
 		<div class="max-w-2xl">
 			<h1 class="text-left lg:text-center text-3xl font-bold tracking-tight text-gray-900 sm:text-4xl dark:text-slate-100">
-				<div class="flex justify-start lg:justify-center gap-4">
+				<div
+					class={`flex justify-start ${
+						page === "dashboard" ? "" : "lg:justify-center gap-4"
+					}`}>
 					<div class="-mt-0.5">💁‍♂️</div> About
 				</div>
 			</h1>

@@ -1,6 +1,7 @@
 import { Component, For, Match, Show, Switch, createResource } from "solid-js";
 import PostCard from "../components/PostCard";
 import { Post } from "../components/data/Types";
+import { useLocation } from "@solidjs/router";
 
 const Blog: Component = () => {
 	const fetchPosts = async () => {
@@ -12,13 +13,20 @@ const Blog: Component = () => {
 		return data.posts;
 	};
 	const [posts] = createResource(fetchPosts);
-
+	const path = useLocation().pathname;
+	const page = path.split("/")[1];
 	// Render posts
 	return (
 		<>
-			<div class="mx-auto max-w-7xl px-6 lg:px-8">
-				<div class=" mx-auto max-w-2xl text-center">
-					<h2 class="flex justify-center gap-2 text-3xl font-bold tracking-tight text-gray-900 dark:text-gray-100 sm:text-4xl">
+			<div class={`${page === "dashboard" ? "" : "mx-auto"} max-w-7xl`}>
+				<div
+					class={`max-w-2xl ${
+						page === "dashboard" ? "text-left" : "text-center mx-auto"
+					}`}>
+					<h2
+						class={`flex ${
+							page === "dashboard" ? "justify-start" : "justify-center"
+						} gap-2 text-3xl font-bold tracking-tight text-gray-900 dark:text-gray-100 sm:text-4xl`}>
 						<div class="-mt-0.5">📃</div>Blog{" "}
 					</h2>
 					<p class="mt-6 text-lg leading-8 dark:text-gray-300 text-gray-600">

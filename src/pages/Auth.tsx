@@ -1,19 +1,7 @@
-import {
-	Component,
-	createEffect,
-	createSignal,
-	onCleanup,
-	onMount,
-	useContext,
-} from "solid-js";
+import { Component, createEffect, createSignal } from "solid-js";
 import { useAuth } from "../components/auth/authContext";
 import { useNavigate, useLocation } from "@solidjs/router";
-import {
-	useSupabase,
-	useSupabaseAuth,
-	useOnAuthStateChange,
-} from "solid-supabase";
-import { Session } from "@supabase/supabase-js";
+import { useSupabaseAuth } from "solid-supabase";
 
 const Auth: Component = () => {
 	const location = useLocation();
@@ -98,7 +86,7 @@ const Auth: Component = () => {
 							<div>
 								<label
 									for="email"
-									class="block text-sm font-medium leading-6 text-gray-900">
+									class="block text-sm font-medium leading-6 text-gray-900 dark:text-gray-300">
 									Email address
 								</label>
 								<div class="mt-2">
@@ -119,14 +107,14 @@ const Auth: Component = () => {
 								<div class="flex items-center justify-between">
 									<label
 										for="password"
-										class="block text-sm font-medium leading-6 text-gray-900">
+										class="block text-sm font-medium leading-6 text-gray-900 dark:text-gray-300">
 										Password
 									</label>
 									{location.pathname === "/auth/sign-in" && (
 										<div class="text-sm">
 											<a
 												href="#"
-												class="font-semibold text-indigo-600 hover:text-indigo-500">
+												class="font-semibold text-indigo-600 dark:text-indigo-400 hover:text-indigo-500">
 												Forgot password?
 											</a>
 										</div>
@@ -149,7 +137,7 @@ const Auth: Component = () => {
 							<div>
 								<button
 									type="submit"
-									class="flex w-full justify-center rounded-md bg-indigo-600 px-3 py-1.5 text-sm font-semibold leading-6 text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600">
+									class="flex w-full justify-center rounded-md bg-indigo-600 dark:bg-indigo-500 px-3 py-1.5 text-sm font-semibold leading-6 text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600">
 									{location.pathname === "/auth/sign-in" && !loading()
 										? "Sign in"
 										: mode() !== "sign-in" && !loading()
