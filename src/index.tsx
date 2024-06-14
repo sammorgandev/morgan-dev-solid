@@ -33,6 +33,7 @@ render(
 						<Route path="/work" component={Work} />
 						<Route path="/work/:slug" component={Post} />
 						<Route path="/category/:category" component={Category} />
+						<Route path="/category/:category/:slug" component={Post} />
 						<Route path="/blog" component={Blog} />
 						<Route path="/blog/:slug" component={Post} />
 						<Route path="/auth/:mode?" component={Auth} />

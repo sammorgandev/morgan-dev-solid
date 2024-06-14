@@ -12,8 +12,6 @@ import {
 	bars_3,
 	bell,
 	calendar,
-	chartPie,
-	documentDuplicate,
 	folder,
 	home,
 	users,
@@ -61,7 +59,7 @@ const tools = [
 ];
 
 const handleSignOut = () => {
-	supabase.auth.signOut();
+	supabase.auth.signOut().then(r => console.log(r));
 };
 
 const userNavigation = [
@@ -78,6 +76,7 @@ interface DialogProps {
 	onClose: () => void;
 	children: JSX.Element;
 }
+{/*MOBILE MENU*/}
 const Dialog = (props: DialogProps) => {
 	return (
 		<div class={`fixed inset-0 z-50 ${props.open ? "block" : "hidden"}`}>

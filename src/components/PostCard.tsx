@@ -40,9 +40,16 @@ export default function PostCard(post: Post) {
 						</div>
 					)}
 				</div>
+				<div class="flex mt-2 text-sm text-gray-600 dark:text-gray-300 gap-2">
+					{post.tags?.map((tag) => (
+						<div class="flex hover:text-indigo-600 hover:cursor-pointer">
+							#{tag}{" "}
+						</div>
+					))}
+				</div>
 				<div class="group relative">
 					<h3 class="mt-3 text-lg font-semibold overflow-clip max-h-6 leading-6  text-gray-900 dark:text-gray-100 dark:group-hover:text-gray-50 group-hover:text-gray-600">
-						<a href={`${path.split("/")[1]}/${post.slug}`}>
+						<a href={`${path}/${post.slug}`}>
 							<span class="absolute inset-0" />
 							{post.title}
 						</a>

@@ -1,7 +1,7 @@
 import { Icon } from "solid-heroicons";
 import { moon, sun } from "solid-heroicons/solid";
 import { useDarkMode } from "./layout/ThemeProvider";
-import { JSX, createSignal, useContext } from "solid-js";
+import { JSX, createSignal  } from "solid-js";
 import { A, action } from "@solidjs/router";
 import { toast, Toaster } from "solid-toast";
 import { useAuth } from "./auth/authContext";

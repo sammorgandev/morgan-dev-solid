@@ -43,7 +43,7 @@ export default function Header() {
 						class="flex"
 						inactiveClass={`text-sm font-semibold leading-6 text-gray-900 hover:text-indigo-600 dark:text-gray-50 transition-all ease-in`}
 						activeClass={`"text-indigo-600 text-sm font-semibold leading-6 hover:text-indigo-600 dark:text-indigo-400 transition-all ease-in`}
-						href="/auth/sign-in">
+						href={"/auth/sign-in"}>
 						{session() === null ? (
 							"Log in"
 						) : (
@@ -57,7 +57,7 @@ export default function Header() {
 					</A>
 					{session() === null && (
 						<A
-							href="/auth/sign-up"
+							href={"/auth/sign-up"}
 							class="rounded-md bg-indigo-600 dark:bg-indigo-500 px-3.5 py-2.5 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 dark:hover:bg-indigo-400 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600">
 							Sign up
 						</A>
@@ -106,7 +106,7 @@ export default function Header() {
 								</div>
 								<div class="py-6" onClick={() => setMobileMenuOpen(false)}>
 									<A
-										href="/contact"
+										href={"/contact"}
 										onClick={() => setMobileMenuOpen(false)}
 										class="-mx-3 block rounded-lg px-3 py-2.5 text-base font-semibold leading-7 text-gray-900 dark:text-gray-100 hover:bg-gray-50 dark:hover:bg-white/5">
 										{session() === null ? "Login" : "Dashboard"}{" "}
