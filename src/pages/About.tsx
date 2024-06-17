@@ -89,9 +89,9 @@ const About: Component = () => {
 						Browse work
 					</A>
 					<A
-						href="/work"
+						href="/auth/sign-up"
 						class="text-sm font-semibold leading-6 text-gray-900 dark:text-slate-300 hover:text-indigo-600 transition-all ease-in">
-						Browse work <span aria-hidden="true">→</span>
+						Sign up <span aria-hidden="true">→</span>
 					</A>
 				</div>
 			</div>

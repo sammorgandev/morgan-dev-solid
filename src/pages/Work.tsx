@@ -2,12 +2,14 @@ import { Component, For, Match, Show, Switch, createResource } from "solid-js";
 import PostCard from "../components/PostCard";
 import { Post } from "../components/data/Types";
 import { useLocation } from "@solidjs/router";
+import { Suspense } from "solid-js";
+import SkeletonPostCard from "../components/atoms/SkeletonPostCard";
 
 const Work: Component = () => {
 	const fetchPosts = async () => {
 		const response = await fetch(import.meta.env.VITE_API_URL + "/posts");
 		const data = await response.json();
-		return data.posts.filter((post: Post) => post.category !== "blog posts");
+		return data.posts;
 	};
 	const [posts] = createResource(fetchPosts);
 	const path = useLocation().pathname;
@@ -30,19 +32,18 @@ const Work: Component = () => {
 						entrepreneur.{" "}
 					</p>
 				</div>
-				<Show when={posts.loading}>
-					<p>Loading...</p>
-				</Show>
-				<Switch>
-					<Match when={posts.error}>
-						<p>Error: {posts.error.message}</p>
-					</Match>
-					<Match when={posts()}>
-						<div class="mx-auto mt-16 grid max-w-2xl grid-cols-1 gap-x-8 gap-y-20 lg:mx-0 lg:max-w-none lg:grid-cols-3">
-							<For each={posts()}>{(post: Post) => <PostCard {...post} />}</For>
-						</div>
-					</Match>
-				</Switch>
+				<Suspense fallback={<SkeletonPostCard />}>
+					<Switch>
+						<Match when={posts.error}>
+							<p>Error: {posts.error.message}</p>
+						</Match>
+						<Match when={posts()}>
+							<div class="mx-auto mt-16 grid max-w-2xl grid-cols-1 gap-x-8 gap-y-20 lg:mx-0 lg:max-w-none lg:grid-cols-3">
+								<For each={posts()}>{(post: Post) => <PostCard {...post} />}</For>
+							</div>
+						</Match>
+					</Switch>
+				</Suspense>
 			</div>
 		</>
 	);

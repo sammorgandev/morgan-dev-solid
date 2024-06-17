@@ -3,6 +3,7 @@ import { useParams, useLocation } from "@solidjs/router";
 import { chevronLeft } from "solid-heroicons/solid";
 import { Icon } from "solid-heroicons";
 import { Post as PostType } from "../components/data/Types";
+import {YoutubePlayer} from "../components/atoms/YoutubePlayer";
 
 const Post: Component = () => {
 	const params = useParams();
@@ -12,7 +13,7 @@ const Post: Component = () => {
 	const backPath = path.split("/").slice(0, -1).join("/");
 	const backDisplay = backPath.split("/").slice(1).join("/").split("/")[0];
 	const backDisplay2 = backPath.split("/").slice(1).join("/").split("/")[1];
-	console.log(backPath);
+	console.log("Backpath:", backPath);
 	console.log("Backpath length:", backPath.split("/").length);
 
 	const fetchPost = async () => {
@@ -24,15 +25,14 @@ const Post: Component = () => {
 		return data as PostType;
 	};
 	const [post] = createResource(fetchPost);
-
 	console.log(post());
 	return (
 		<div class="bg-transparent">
 			<div class="mx-auto max-w-3xl text-base leading-7 text-gray-700 dark:text-gray-300">
 				<a
 					href={`${backPath}`}
-					class="text-base flex items-center font-semibold leading-7 text-indigo-600 dark:text-indigo-400">
-					<Icon path={chevronLeft} class="w-4 h-4" />
+					class="text-base flex items-center font-semibold leading-7 text-indigo-600 z-20 dark:text-indigo-400">
+					<Icon path={chevronLeft} class="w-4 h-4"/>
 					{backPath.split("/").length > 2
 						? backDisplay2.replace("-", " ").toUpperCase()
 						: backDisplay.replace("-", " ").toUpperCase()}
@@ -41,16 +41,34 @@ const Post: Component = () => {
 					{post()?.title}
 				</h1>
 				<p class="mt-6 text-xl leading-8 dark:text-gray-200">{post()?.body}</p>
+
+				<figure class="mt-8">
+					{post()?.video ? (<YoutubePlayer videoId={post()?.video} />) : (<img
+						class="aspect-video rounded-xl bg-gray-50 dark:bg-gray-700 object-cover"
+						src={post()?.image}
+						alt=""></img>)}
+					<figcaption class="mt-4 flex gap-x-2 text-sm leading-6 text-gray-500 dark:text-gray-300">
+						<svg
+							class="mt-0.5 h-5 w-5 flex-none text-gray-300 dark:text-gray-500"
+							viewBox="0 0 20 20"
+							fill="currentColor"
+							aria-hidden="true">
+							<path
+								fill-rule="evenodd"
+								d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a.75.75 0 000 1.5h.253a.25.25 0 01.244.304l-.459 2.066A1.75 1.75 0 0010.747 15H11a.75.75 0 000-1.5h-.253a.25.25 0 01-.244-.304l.459-2.066A1.75 1.75 0 009.253 9H9z"
+								clip-rule="evenodd"
+							/>
+						</svg>
+						Faucibus commodo massa rhoncus, volutpat.
+					</figcaption>
+				</figure>
 				<div class="mt-10 max-w-2xl">
 					<p class="text-gray-600 dark:text-gray-400">
-						Faucibus commodo massa rhoncus, volutpat. Dignissim sed eget risus
-						enim. Mattis mauris semper sed amet vitae sed turpis id. Id dolor
-						praesent donec est. Odio penatibus risus viverra tellus varius sit
-						neque erat velit. Faucibus commodo massa rhoncus, volutpat.
-						Dignissim sed eget risus enim. Mattis mauris semper sed amet vitae
-						sed turpis id.
+						{post()?.body_2}
 					</p>
-					<ul
+
+
+					{post()?.list_1_title || post()?.list_2_title || post()?.list_3_title && (<ul
 						role="list"
 						class="mt-8 max-w-xl space-y-8 text-gray-600 dark:text-gray-400">
 						<li class="flex gap-x-3">
@@ -67,11 +85,9 @@ const Post: Component = () => {
 							</svg>
 							<span>
 								<strong class="font-semibold text-gray-900 dark:text-gray-100">
-									Data types.
+									{post()?.list_1_title}
 								</strong>{" "}
-								Lorem ipsum, dolor sit amet consectetur adipisicing elit.
-								Maiores impedit perferendis suscipit eaque, iste dolor
-								cupiditate blanditiis ratione.
+								{post()?.list_1_description}
 							</span>
 						</li>
 						<li class="flex gap-x-3">
@@ -88,10 +104,9 @@ const Post: Component = () => {
 							</svg>
 							<span>
 								<strong class="font-semibold text-gray-900 dark:text-gray-100">
-									Loops.
+									{post()?.list_2_title}
 								</strong>{" "}
-								Anim aute id magna aliqua ad ad non deserunt sunt. Qui irure qui
-								lorem cupidatat commodo.
+								{post()?.list_2_description}
 							</span>
 						</li>
 						<li class="flex gap-x-3">
@@ -108,96 +123,49 @@ const Post: Component = () => {
 							</svg>
 							<span>
 								<strong class="font-semibold text-gray-900 dark:text-gray-100">
-									Events.
+									{post()?.list_3_title}
 								</strong>{" "}
-								Ac tincidunt sapien vehicula erat auctor pellentesque rhoncus.
-								Et magna sit morbi lobortis.
+								{post()?.list_3_description}
 							</span>
 						</li>
-					</ul>
+					</ul>)}
 					<p class="mt-8 text-gray-600 dark:text-gray-400">
-						Et vitae blandit facilisi magna lacus commodo. Vitae sapien duis
-						odio id et. Id blandit molestie auctor fermentum dignissim. Lacus
-						diam tincidunt ac cursus in vel. Mauris varius vulputate et ultrices
-						hac adipiscing egestas. Iaculis convallis ac tempor et ut. Ac lorem
-						vel integer orci.
+						{post()?.body_3}
 					</p>
 					<h2 class="mt-16 text-2xl font-bold tracking-tight text-gray-900 dark:text-gray-100">
-						From beginner to expert in 3 hours
+						{post()?.title_2}
 					</h2>
 					<p class="mt-6 text-gray-600 dark:text-gray-400">
-						Id orci tellus laoreet id ac. Dolor, aenean leo, ac etiam consequat
-						in. Convallis arcu ipsum urna nibh. Pharetra, euismod vitae interdum
-						mauris enim, consequat vulputate nibh. Maecenas pellentesque id sed
-						tellus mauris, ultrices mauris. Tincidunt enim cursus ridiculus mi.
-						Pellentesque nam sed nullam sed diam turpis ipsum eu a sed convallis
-						diam.
+						{post()?.body_4}
 					</p>
-					<figure class="mt-10 border-l border-indigo-600 dark:border-indigo-400 pl-9">
+					{post()?.quote_text && (<figure class="mt-10 border-l border-indigo-600 dark:border-indigo-400 pl-9">
 						<blockquote class="font-semibold text-gray-900 dark:text-gray-100">
 							<p>
-								“Vel ultricies morbi odio facilisi ultrices accumsan donec lacus
-								purus. Lectus nibh ullamcorper ac dictum justo in euismod. Risus
-								aenean ut elit massa. In amet aliquet eget cras. Sem volutpat
-								enim tristique.”
+								{post()?.quote_text}
 							</p>
 						</blockquote>
 						<figcaption class="mt-6 flex gap-x-4">
 							<img
 								class="h-6 w-6 flex-none rounded-full bg-gray-50 dark:bg-gray-700"
-								src="https://images.unsplash.com/photo-1502685104226-ee32379fefbe?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80"
+								src={post()?.quote_author_image}
 								alt=""></img>
 							<div class="text-sm leading-6 text-gray-900 dark:text-gray-100">
-								<strong class="font-semibold">Maria Hill</strong> – Marketing
-								Manager
+								<strong class="font-semibold">{post()?.quote_author_name}</strong> – {post()?.quote_author_title}{" "}
 							</div>
 						</figcaption>
-					</figure>
+					</figure>)}
 					<p class="mt-10 text-gray-600 dark:text-gray-400">
-						Faucibus commodo massa rhoncus, volutpat. Dignissim sed eget risus
-						enim. Mattis mauris semper sed amet vitae sed turpis id. Id dolor
-						praesent donec est. Odio penatibus risus viverra tellus varius sit
-						neque erat velit.
+						{post()?.body_5}
 					</p>
 				</div>
-				<figure class="mt-16">
-					<img
-						class="aspect-video rounded-xl bg-gray-50 dark:bg-gray-700 object-cover"
-						src="https://images.unsplash.com/photo-1500648767791-00dcc994a43e?ixlib=rb-1.2.1&auto=format&fit=facearea&w=1310&h=873&q=80&facepad=3"
-						alt=""></img>
-					<figcaption class="mt-4 flex gap-x-2 text-sm leading-6 text-gray-500 dark:text-gray-300">
-						<svg
-							class="mt-0.5 h-5 w-5 flex-none text-gray-300 dark:text-gray-500"
-							viewBox="0 0 20 20"
-							fill="currentColor"
-							aria-hidden="true">
-							<path
-								fill-rule="evenodd"
-								d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a.75.75 0 000 1.5h.253a.25.25 0 01.244.304l-.459 2.066A1.75 1.75 0 0010.747 15H11a.75.75 0 000-1.5h-.253a.25.25 0 01-.244-.304l.459-2.066A1.75 1.75 0 009.253 9H9z"
-								clip-rule="evenodd"
-							/>
-						</svg>
-						Faucibus commodo massa rhoncus, volutpat.
-					</figcaption>
-				</figure>
+
 				<div class="mt-16 max-w-2xl">
 					<h2 class="text-2xl font-bold tracking-tight text-gray-900 dark:text-gray-100">
-						Everything you need to get up and running
-					</h2>
+						{post()?.title_3}					</h2>
 					<p class="mt-6 text-gray-600 dark:text-gray-400">
-						Purus morbi dignissim senectus mattis adipiscing. Amet, massa quam
-						varius orci dapibus volutpat cras. In amet eu ridiculus leo sodales
-						cursus tristique. Tincidunt sed tempus ut viverra ridiculus non
-						molestie. Gravida quis fringilla amet eget dui tempor dignissim.
-						Facilisis auctor venenatis varius nunc, congue erat ac. Cras
-						fermentum convallis quam.
+						{post()?.body_6}
 					</p>
-					<p class="mt-8 text-gray-600 dark:text-gray-400">
-						Faucibus commodo massa rhoncus, volutpat. Dignissim sed eget risus
-						enim. Mattis mauris semper sed amet vitae sed turpis id. Id dolor
-						praesent donec est. Odio penatibus risus viverra tellus varius sit
-						neque erat velit.
-					</p>
+
 				</div>
 			</div>
 		</div>

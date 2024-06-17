@@ -1,8 +1,9 @@
 import { Post } from "./data/Types";
-import { useLocation } from "@solidjs/router";
+import { useLocation, useParams } from "@solidjs/router";
 
 export default function PostCard(post: Post) {
 	const path = useLocation().pathname;
+	const params = useParams();
 	console.log(path);
 	return (
 		<article
@@ -27,23 +28,17 @@ export default function PostCard(post: Post) {
 							day: "numeric",
 						})}
 					</time>
-					{path === "/work" ? (
-						<a
-							href={`/category/${post.category}`}
-							class="relative z-10 rounded-full bg-indigo-50/50 dark:bg-indigo-200/30 dark:text-gray-100 px-3 py-1.5 font-medium text-gray-600 dark:hover:bg-indigo-100/50 hover:text-indigo-600 hover:bg-indigo-100">
-							{post.category}
-						</a>
-					) : (
-						<div class="relative z-10 rounded-full bg-indigo-50/50 dark:bg-indigo-200/30 dark:text-gray-100 px-3 py-1.5 font-medium text-gray-600">
-							{" "}
-							{post.category}{" "}
-						</div>
-					)}
+
+					<a href={path.includes("dashboard") ? `/dashboard/work/category/${post.category?.replace(" ", "-").toLowerCase()}` : `/work/category/${post.category?.replace(" ", "-").toLowerCase()}`}
+					   class="relative z-10 rounded-full bg-indigo-50/50 dark:bg-indigo-200/30 dark:text-gray-100 px-3 py-1.5 font-medium text-gray-600 dark:hover:bg-indigo-100/50 hover:text-indigo-600 hover:bg-indigo-100">
+						{post.category}
+					</a>
+
 				</div>
 				<div class="flex mt-2 text-sm text-gray-600 dark:text-gray-300 gap-2">
 					{post.tags?.map((tag) => (
 						<div class="flex hover:text-indigo-600 hover:cursor-pointer">
-							#{tag}{" "}
+							<a href={path.includes("dashboard") ? `/dashboard/work/tag/${tag?.replace(" ", "-").toLowerCase()}` : `/work/tag/${tag?.replace(" ", "-").toLowerCase()}`}>#{tag}{" "}</a>
 						</div>
 					))}
 				</div>

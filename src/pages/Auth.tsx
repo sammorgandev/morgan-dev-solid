@@ -36,6 +36,8 @@ const Auth: Component = () => {
             }
         } catch (error) {
             if (error instanceof Error) {
+                console.error(error); // Log the error to the console
+
                 alert(error.message);
             }
         } finally {
@@ -77,7 +79,7 @@ const Auth: Component = () => {
                         {location.pathname === "/auth/sign-in"
                             ? "Welcome back! Sign in to your account to access more tools and cool stuff."
                             : location.pathname === "/auth/sign-up"
-                                ? "Why create an account? Honestly - no reason. I have a few cool tools that use third party APIs that you can access."
+                                ? "Sign up to access my private portfolio - I have a few cool tools that use third party APIs, the auth is just to keep the bots away."
                                 : "Please check your inbox and click the link to confirm your email address."}
                     </p>
                 </div>

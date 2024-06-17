@@ -8,42 +8,40 @@ import SkeletonPostCard from "../components/atoms/SkeletonPostCard";
 import { Suspense } from "solid-js";
 
 
-const Category: Component = () => {
-	const path = useLocation().pathname;
-	console.log(path);
-
+const Tag: Component = () => {
+	const path= useLocation().pathname;
 	const params = useParams();
 
 	const fetchPosts = async () => {
 		const response = await fetch(
-			import.meta.env.VITE_API_URL + "/posts/category/" + params.category
+			import.meta.env.VITE_API_URL + "/posts/tag/" + params.tag
 		);
 		const data = await response.json();
 		console.log(data.posts);
 		return data.posts;
 	};
-	const [posts] = createResource(fetchPosts);const toTitleCase = (str: string) => {
-		let words = str.split(' ');
-		words[0] = words[0].charAt(0).toUpperCase() + words[0].substring(1).toLowerCase();
-		for (let i = 1; i < words.length; i++) {
-			words[i] = words[i].toLowerCase();
-		}
-		return words.join(' ');
+	const [posts] = createResource(fetchPosts);
+	const toTitleCase = (str: string) => {
+		return str.replace(
+			/\w\S*/g,
+			(txt) => txt.charAt(0).toUpperCase() + txt.substring(1).toLowerCase()
+		);
 	};
 	// Render posts
+	// @ts-ignore
 	return (
 		<>
 			<div class="mx-auto max-w-7xl px-6 lg:px-8">
 				<div class="mx-auto max-w-2xl text-center">
 					<h2 class="flex gap-2 justify-center items-center text-3xl font-bold tracking-tight text-gray-900 dark:text-gray-100 sm:text-4xl">
-						<a href={`${path.includes("dashboard") ? "/dashboard/work" : "/work"}`} class="z-20">
+						<a href={path.includes("dashboard") ? "/dashboard/work" : "/work"} class="z-20">
 							<Icon path={chevronLeft} class=" h-6 w-6" />
 						</a>
 						<div class="-mt-0.5">🏷️</div>
-						{toTitleCase((params.category).replace('-', ' '))}{" "}
+						{" "}#{params.tag}{" "}
 					</h2>
 					<p class="mt-2 text-lg leading-8 dark:text-gray-300 text-gray-600">
-Browse posts with the {params.category} category.
+						Browse posts with the #{params.tag} tag.
 					</p>
 				</div>
 				<Suspense fallback={<SkeletonPostCard />}>
@@ -63,4 +61,4 @@ Browse posts with the {params.category} category.
 		</>
 	);
 };
-export default Category;
+export default Tag;

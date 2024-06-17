@@ -1,6 +1,7 @@
 import { A } from "@solidjs/router";
 import { Component } from "solid-js";
 import { useLocation } from "@solidjs/router";
+import SocialLinks from "../components/atoms/SocialLinks";
 const Home: Component = () => {
 	const path = useLocation().pathname;
 	const page = path.split("/")[1];
@@ -13,36 +14,16 @@ const Home: Component = () => {
 						? "items-start"
 						: "items-center lg:justify-center"
 				}`}>
-				<div class="relative rounded-full px-3 py-1 text-sm leading-6 text-gray-600 ring-1 ring-gray-900/10 hover:ring-gray-900/20 dark:text-slate-300 dark:ring-gray-200/10 dark:hover:ring-gray-200/20">
-					<div class="flex gap-2 items-center">
-						<div class="flex">
-							<div class="h-fit">
-								<img
-									src="../../src/assets/x-dark-mode.png"
-									alt=""
-									width={32}
-									height={32}
-								/>
-							</div>
 
-							<span class="font-semibold">@_sambubble </span>
-						</div>
-						<A
-							href="https://twitter.com/_sambubble"
-							target="_blank"
-							class="font-semibold text-indigo-600 dark:text-indigo-400 ml-2">
-							<span class="absolute inset-0" aria-hidden="true" />
-							Follow me<span aria-hidden="true">&rarr;</span>
-						</A>
-					</div>
-				</div>
+				<SocialLinks />
 			</div>
 			<div
 				class={`text-left flex-grow ${
 					page === "dashboard" ? "" : "lg:text-center"
 				} mb-4 lg:mb-0`}>
+				<div class={"flex flex-col lg:items-center"}>
 				<div
-					class={`text-5xl md:text-6xl font-bold tracking-tight gap-4 text-gray-900 dark:text-slate-100 flex justify-left ${
+					class={`text-5xl mb-6 md:text-6xl font-bold tracking-tight gap-4 text-gray-900 dark:text-slate-100 flex justify-left ${
 						page === "dashboard" ? "" : "lg:justify-center gap-8"
 					}`}>
 					<div class="wave-element -mt-1">👋 </div>
@@ -52,6 +33,10 @@ const Home: Component = () => {
 						</h1>
 					</div>
 				</div>
+
+				</div>
+
+
 				<p class="mt-6 text-lg leading-8 text-gray-600 dark:text-slate-300">
 					I&apos;m a computer nerd, product enthusiast, and developer who is
 					passionate about{" "}

@@ -32,7 +32,6 @@ const navigation = [
 	{ name: "Home", href: "/dashboard/home", icon: home, current: true },
 	{ name: "About", href: "/dashboard/about", icon: users, current: false },
 	{ name: "Work", href: "/dashboard/work", icon: folder, current: false },
-	{ name: "Blog", href: "/dashboard/blog", icon: calendar, current: false },
 ];
 const tools = [
 	{
@@ -453,7 +452,7 @@ const DashboardLayout: Component<{ children?: JSX.Element }> = (props) => {
 							</div>
 
 							{/* Main content */}
-							<main class="py-10 flex-1">
+							<main class="py-10 z-20 flex-1">
 								<div class="px-4 sm:px-6 lg:px-8">{props.children}</div>
 							</main>
 							<div
