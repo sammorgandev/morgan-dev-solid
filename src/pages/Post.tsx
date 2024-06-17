@@ -47,7 +47,7 @@ const Post: Component = () => {
 						class="aspect-video rounded-xl bg-gray-50 dark:bg-gray-700 object-cover"
 						src={post()?.image}
 						alt=""></img>)}
-					<figcaption class="mt-4 flex gap-x-2 text-sm leading-6 text-gray-500 dark:text-gray-300">
+					{post()?.image_caption && (<figcaption class="mt-4 flex gap-x-2 text-sm leading-6 text-gray-500 dark:text-gray-300">
 						<svg
 							class="mt-0.5 h-5 w-5 flex-none text-gray-300 dark:text-gray-500"
 							viewBox="0 0 20 20"
@@ -59,8 +59,8 @@ const Post: Component = () => {
 								clip-rule="evenodd"
 							/>
 						</svg>
-						Faucibus commodo massa rhoncus, volutpat.
-					</figcaption>
+						{post()?.image_caption}
+					</figcaption>)}
 				</figure>
 				<div class="mt-10 max-w-2xl">
 					<p class="text-gray-600 dark:text-gray-400">
@@ -68,7 +68,7 @@ const Post: Component = () => {
 					</p>
 
 
-					{post()?.list_1_title || post()?.list_2_title || post()?.list_3_title && (<ul
+					{post()?.list_1_title && (<ul
 						role="list"
 						class="mt-8 max-w-xl space-y-8 text-gray-600 dark:text-gray-400">
 						<li class="flex gap-x-3">
@@ -144,13 +144,15 @@ const Post: Component = () => {
 								{post()?.quote_text}
 							</p>
 						</blockquote>
+
 						<figcaption class="mt-6 flex gap-x-4">
 							<img
 								class="h-6 w-6 flex-none rounded-full bg-gray-50 dark:bg-gray-700"
 								src={post()?.quote_author_image}
 								alt=""></img>
+
 							<div class="text-sm leading-6 text-gray-900 dark:text-gray-100">
-								<strong class="font-semibold">{post()?.quote_author_name}</strong> – {post()?.quote_author_title}{" "}
+								<strong class="font-semibold">{post()?.quote_author_title}</strong> – {post()?.quote_author_role}{" "}
 							</div>
 						</figcaption>
 					</figure>)}

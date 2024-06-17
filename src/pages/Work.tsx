@@ -19,11 +19,11 @@ const Work: Component = () => {
 			<div class={`${page === "dashboard" ? "" : "mx-auto"} max-w-7xl`}>
 				<div
 					class={`${
-						page === "dashboard" ? "text-left" : "mx-auto text-center"
+						page === "dashboard" ? "text-left" : "lg:mx-auto lg:text-center"
 					} max-w-2xl`}>
 					<h2
 						class={`flex gap-2 ${
-							page === "dashboard" ? "justify-start" : "justify-center"
+							page === "dashboard" ? "justify-start" : "lg:justify-center"
 						} text-3xl font-bold tracking-tight text-gray-900 dark:text-gray-100 sm:text-4xl`}>
 						<div class="-mt-0.5">👨‍💻</div>Things I've worked on{" "}
 					</h2>

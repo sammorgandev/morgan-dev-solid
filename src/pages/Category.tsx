@@ -34,8 +34,8 @@ const Category: Component = () => {
 	return (
 		<>
 			<div class="mx-auto max-w-7xl px-6 lg:px-8">
-				<div class="mx-auto max-w-2xl text-center">
-					<h2 class="flex gap-2 justify-center items-center text-3xl font-bold tracking-tight text-gray-900 dark:text-gray-100 sm:text-4xl">
+				<div class="mx-auto max-w-2xl lg:text-center">
+					<h2 class="flex gap-2 lg:justify-center items-center text-3xl font-bold tracking-tight text-gray-900 dark:text-gray-100 sm:text-4xl">
 						<a href={`${path.includes("dashboard") ? "/dashboard/work" : "/work"}`} class="z-20">
 							<Icon path={chevronLeft} class=" h-6 w-6" />
 						</a>

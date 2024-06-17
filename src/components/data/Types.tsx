@@ -18,6 +18,7 @@ export type Post = {
 	body_6?: string;
 	title_2?: string;
 	title_3?: string;
+	image_caption?: string;
 	list_1_title?: string;
 	list_1_description?: string;
 	list_2_title?: string;
